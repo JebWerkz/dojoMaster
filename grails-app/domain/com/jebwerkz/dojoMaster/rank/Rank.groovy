@@ -11,6 +11,8 @@ class Rank {
     String nameKr
     String title
     String belt
+    String uniform
+    String chevrons
     String description
 
     static constraints = {
