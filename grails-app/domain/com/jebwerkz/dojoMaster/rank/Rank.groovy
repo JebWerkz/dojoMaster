@@ -15,6 +15,10 @@ class Rank {
     String chevrons
     String description
 
+    String toString() {
+        "$team/$art - $name"
+    }
+
     static constraints = {
     }
 }
