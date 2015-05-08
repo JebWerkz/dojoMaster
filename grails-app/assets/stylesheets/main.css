@@ -48,7 +48,7 @@ body {
 	        box-shadow: 0 0 0.3em #255b17;
 }
 
-#grailsLogo {
+#schoolLogo {
 	background-color: #1E73BE;
 }
 
@@ -90,7 +90,7 @@ img {
 
 /* GENERAL */
 
-#grailsLogo a {
+#schoolLogo a {
 	display: inline-block;
 	margin: 1em;
 }
