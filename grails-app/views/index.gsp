@@ -9,7 +9,7 @@
 				border: .2em solid #fff;
 				margin: 2em 2em 1em;
 				padding: 1em;
-				width: 12em;
+				width: 20em;
 				float: left;
 				-moz-box-shadow: 0px 0px 1.25em #ccc;
 				-webkit-box-shadow: 0px 0px 1.25em #ccc;
@@ -82,47 +82,45 @@
 	</head>
 	<body>
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div id="status" role="complementary">
-			<h1>School Status</h1>
+		<ul class="nav nav-pills nav-justified">
+            <li role="presentation" class="active">
+                <a href="#">Home</a>
+            </li>
+            <li role="presentation">
+                <a href="#">For Students</a>
+            </li>
+            <li role="presentation">
+                <a href="#">For Parents</a>
+            </li>
+            <li role="presentation">
+                <a href="#">For Instructors</a>
+            </li>
+        </ul>
+        
+        <div id="status" role="complementary">
+			<h1>School News</h1>
 			<ul>
-                <li>Students</li>
-                <li><ul>Arts
-                    <li>태권도 - Taekwondo</li>
-                    <li>합기도 - Hapkido</li>
-                    <li>무기도 - Mukido</li>
-                </ul></li>
-				<li>App version: <g:meta name="app.version"/></li>
-				<li>Grails version: <g:meta name="app.grails.version"/></li>
-				<li>Groovy version: ${GroovySystem.getVersion()}</li>
-				<li>JVM version: ${System.getProperty('java.version')}</li>
-				<li>Reloading active: ${grails.util.Environment.reloadingAgentEnabled}</li>
-				<li>Controllers: ${grailsApplication.controllerClasses.size()}</li>
-				<li>Domains: ${grailsApplication.domainClasses.size()}</li>
-				<li>Services: ${grailsApplication.serviceClasses.size()}</li>
-				<li>Tag Libraries: ${grailsApplication.tagLibClasses.size()}</li>
-			</ul>
-			<h1>Installed Plugins</h1>
+                <li><a href="#">Upcoming tournament at FMAC</a></li>
+                <li><a href="#">Demo @ CelebrAsian</a></li>
+                <li><a href="#">Skills exams next week!</a></li>
+            </ul>
+            <h1>Resources</h1>
 			<ul>
-				<g:each var="plugin" in="${applicationContext.getBean('pluginManager').allPlugins}">
-					<li>${plugin.name} - ${plugin.version}</li>
-				</g:each>
-			</ul>
+			    <li><a href="#">Gold Team Manual</a></li>
+                <li><a href="#">5 Quick Tips: Classroom Protocol</a></li>
+                <li><a href="#">Blue Team Entrance Exam Prep</a></li>
+            </ul>
+            <h1>Quote of the Day</h1>
+            <blockquote>Do not break your opponent.  Break his will to fight you.</blockquote>
+            <p>Michael</p>
+            <h1>Master Jack's Reminder</h1>
+            <p>With the summer months upon us, make sure to keep well hydrated throughout the day.  By the time you feel thirsty, it's already too late!</p>
 		</div>
 		<div id="page-body" role="main">
 			<h1>Welcome to Aspen Martial Arts DojoMaster</h1>
-			<p>Congratulations, you have successfully started your first Grails application! At the moment
-			   this is the default page, feel free to modify it to either redirect to a controller or display whatever
-			   content you may choose. Below is a list of controllers that are currently deployed in this application,
-			   click on each to execute its default action:</p>
-
-			<div id="controller-list" role="navigation">
-				<h2>Available Controllers:</h2>
-				<ul>
-					<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-						<li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-					</g:each>
-				</ul>
-			</div>
+			<p>
+                Use the links above to navigate the site and check on your progress, study for a team exam, or browse our resource library.  As always, if you have any questions, feel free to email them to the.masters@aspenmartialarts.com, or ask an instructor next time you're in class!
+            </p>
 		</div>
 	</body>
 </html>

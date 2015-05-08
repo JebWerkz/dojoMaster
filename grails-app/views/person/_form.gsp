@@ -1,6 +1,15 @@
 <%@ page import="com.jebwerkz.dojoMaster.person.Person" %>
 
-
+<g:javascript>
+$( document ).ready(function() {
+    $('#ranks').bootstrapDualListbox({
+        nonSelectedListLabel: 'Non-selected',
+        selectedListLabel: 'Selected',
+        preserveSelectionOnMove: 'moved',
+        moveOnSelect: false
+    });
+})
+</g:javascript>
 
 <div class="fieldcontain ${hasErrors(bean: personInstance, field: 'dateOfBirth', 'error')} required">
 	<label for="dateOfBirth">
