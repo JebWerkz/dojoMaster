@@ -5,6 +5,8 @@ package com.jebwerkz.dojoMaster.person
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
+import java.text.SimpleDateFormat
+
 @Transactional(readOnly = true)
 class PersonController {
 
@@ -25,15 +27,18 @@ class PersonController {
 
     @Transactional
     def save(Person personInstance) {
+        def sdf = new SimpleDateFormat('MM/dd/yyyy')
         if (personInstance == null) {
             notFound()
             return
         }
+        
+        def date = sdf.parse(params.dateOfBirth) //params.date( 'dateOfBirth', 'MM/dd/yyyy' )        
+        personInstance.dateOfBirth = date
+        
+        personInstance.properties.each{ println it }
 
-        if (personInstance.hasErrors()) {
-            respond personInstance.errors, view:'create'
-            return
-        }
+        personInstance.clearErrors()
 
         personInstance.save flush:true
 

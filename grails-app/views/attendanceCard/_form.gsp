@@ -1,22 +1,22 @@
 <%@ page import="com.jebwerkz.dojoMaster.attendance.AttendanceCard" %>
 
+</div>
 
-
-<div class="fieldcontain ${hasErrors(bean: attendanceCardInstance, field: 'attendances', 'error')} ">
-	<label for="attendances">
-		<g:message code="attendanceCard.attendances.label" default="Attendances" />
-		
+<div class="fieldcontain ${hasErrors(bean: attendanceCardInstance, field: 'student', 'error')} required">
+	<label for="student">
+		<g:message code="attendanceCard.student.label" default="Student" />
 	</label>
-	
-<ul class="one-to-many">
-<g:each in="${attendanceCardInstance?.attendances?}" var="a">
-    <li><g:link controller="attendance" action="show" id="${a.id}">${a?.encodeAsHTML()}</g:link></li>
-</g:each>
-<li class="add">
-<g:link controller="attendance" action="create" params="['attendanceCard.id': attendanceCardInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'attendance.label', default: 'Attendance')])}</g:link>
-</li>
-</ul>
+	<g:hiddenField id="student" name="student.id" value="${person}"/>
+    <g:link controller="person" action="show" id="${person}">${com.jebwerkz.dojoMaster.person.Person.get(person).toString()}</g:link>
 
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: attendanceCardInstance, field: 'rank', 'error')} required">
+	<label for="rank">
+		<g:message code="attendanceCard.rank.label" default="Rank" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:select id="rank" name="rank.id" from="${com.jebwerkz.dojoMaster.person.Person.get(person)?.ranks}" optionKey="id" required="" value="${attendanceCardInstance?.rank?.id}" class="many-to-one"/>
 
 </div>
 
@@ -29,12 +29,4 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: attendanceCardInstance, field: 'student', 'error')} required">
-	<label for="student">
-		<g:message code="attendanceCard.student.label" default="Student" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:select id="student" name="student.id" from="${com.jebwerkz.dojoMaster.person.Person.list()}" optionKey="id" required="" value="${attendanceCardInstance?.student?.id}" class="many-to-one"/>
-
-</div>
 

@@ -95,6 +95,11 @@
             <li role="presentation">
                 <a href="#">For Instructors</a>
             </li>
+            <sec:ifAnyGranted roles="ROLE_ADMIN">
+                <li role="presentation">
+                    <a href="admin">For Admins</a>
+                </li>
+            </sec:ifAnyGranted>
         </ul>
         
         <div id="status" role="complementary">

@@ -10,6 +10,7 @@
 //= require_tree .
 //= require_self
 //= require jquery.bootstrap-duallistbox.min.js 
+//= require bootstrap-datepicker.min.js
 
 if (typeof jQuery !== 'undefined') {
 	(function($) {

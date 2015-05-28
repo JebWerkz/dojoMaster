@@ -23,11 +23,44 @@
 			</g:if>
 			<ol class="property-list person">
 			
+				<g:if test="${personInstance?.authorizedAccounts}">
+				<li class="fieldcontain">
+					<span id="authorizedAccounts-label" class="property-label"><g:message code="person.authorizedAccounts.label" default="Authorized Accounts" /></span>
+					
+						<g:each in="${personInstance.authorizedAccounts}" var="a">
+						<span class="property-value" aria-labelledby="authorizedAccounts-label"><g:link controller="person" action="show" id="${a.id}">${a?.encodeAsHTML()}</g:link></span>
+						</g:each>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${personInstance?.cards}">
+				<li class="fieldcontain">
+					<span id="cards-label" class="property-label"><g:message code="person.cards.label" default="Cards" /></span>
+					
+						<g:each in="${personInstance.cards}" var="c">
+						<span class="property-value" aria-labelledby="cards-label"><g:link controller="attendanceCard" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
+						</g:each>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${personInstance?.children}">
+				<li class="fieldcontain">
+					<span id="children-label" class="property-label"><g:message code="person.children.label" default="Children" /></span>
+					
+						<g:each in="${personInstance.children}" var="c">
+						<span class="property-value" aria-labelledby="children-label"><g:link controller="person" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
+						</g:each>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${personInstance?.dateOfBirth}">
 				<li class="fieldcontain">
 					<span id="dateOfBirth-label" class="property-label"><g:message code="person.dateOfBirth.label" default="Date Of Birth" /></span>
 					
-						<span class="property-value" aria-labelledby="dateOfBirth-label"><g:formatDate date="${personInstance?.dateOfBirth}" /></span>
+						<span class="property-value" aria-labelledby="dateOfBirth-label"><g:formatDate date="${personInstance?.dateOfBirth}" format="MM/dd/yyyy"/></span>
 					
 				</li>
 				</g:if>

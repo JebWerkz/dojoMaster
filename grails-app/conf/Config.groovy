@@ -119,6 +119,25 @@ log4j.main = {
            'net.sf.ehcache.hibernate'
 }
 
+// Added by the Spring Security Core plugin:
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.jebwerkz.dojoMaster.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.jebwerkz.dojoMaster.UserRole'
+grails.plugin.springsecurity.authority.className = 'com.jebwerkz.dojoMaster.Role'
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+    
+    '/':                              ['permitAll'],
+	'/index':                         ['permitAll'],
+	'/index.gsp':                     ['permitAll'],
+	'/assets/**':                     ['permitAll'],
+	'/**/js/**':                      ['permitAll'],
+	'/**/css/**':                     ['permitAll'],
+	'/**/images/**':                  ['permitAll'],
+	'/**/favicon.ico':                ['permitAll'],
+    '/**':                            ['ROLE_USER'],
+    '/*':                             ['ROLE_USER']
+]
+
+
 //Constants
 
 team.gold=1
@@ -128,3 +147,4 @@ team.red=3
 art.taekwondo=1
 art.hapkido=2
 art.mukido=3
+

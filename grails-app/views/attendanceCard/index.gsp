@@ -15,7 +15,40 @@
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
-	
-    
-    </body>
+		<div id="list-attendanceCard" class="content scaffold-list" role="main">
+			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
+			<g:if test="${flash.message}">
+				<div class="message" role="status">${flash.message}</div>
+			</g:if>
+			<table>
+			<thead>
+					<tr>
+					
+						<g:sortableColumn property="dateEarned" title="${message(code: 'attendanceCard.dateEarned.label', default: 'Date Earned')}" />
+					
+						<th><g:message code="attendanceCard.rank.label" default="Rank" /></th>
+					
+						<th><g:message code="attendanceCard.student.label" default="Student" /></th>
+					
+					</tr>
+				</thead>
+				<tbody>
+				<g:each in="${attendanceCardInstanceList}" status="i" var="attendanceCardInstance">
+					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+					
+						<td><g:link action="show" id="${attendanceCardInstance.id}">${fieldValue(bean: attendanceCardInstance, field: "dateEarned")}</g:link></td>
+					
+						<td>${fieldValue(bean: attendanceCardInstance, field: "rank")}</td>
+					
+						<td>${fieldValue(bean: attendanceCardInstance, field: "student")}</td>
+					
+					</tr>
+				</g:each>
+				</tbody>
+			</table>
+			<div class="pagination">
+				<g:paginate total="${attendanceCardInstanceCount ?: 0}" />
+			</div>
+		</div>
+	</body>
 </html>

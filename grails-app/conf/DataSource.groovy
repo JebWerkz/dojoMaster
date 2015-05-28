@@ -2,7 +2,7 @@
 dataSource {
     pooled = true
     jmxExport = true
-    url = "jdbc:mysql://localhost/martial_arts?useUnicode=yes&characterEncoding=UTF-8"
+//    url = "jdbc:mysql://localhost/martial_arts?useUnicode=yes&characterEncoding=UTF-8"
     driverClassName = "com.mysql.jdbc.Driver"
     dialect = "org.hibernate.dialect.MySQL5InnoDBDialect"
     username = "ma_con"

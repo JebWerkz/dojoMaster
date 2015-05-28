@@ -7,7 +7,7 @@ class Team {
     String name
     String color
     String description
-    String chinese_character
+    String chineseCharacter
 
     String toString() {
         "$name"

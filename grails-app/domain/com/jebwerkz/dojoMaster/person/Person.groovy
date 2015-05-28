@@ -5,8 +5,6 @@ import com.jebwerkz.dojoMaster.attendance.AttendanceCard
 
 class Person {
 
-    static belongsTo = [parent:Person]
-
     String  lastName
     String  firstName
     Date    dateOfBirth
@@ -17,7 +15,7 @@ class Person {
         ranks?.size() > 0
     }
 
-    boolean isParent(){
+    boolean hasChildren(){
         children?.size() > 0
     }
 

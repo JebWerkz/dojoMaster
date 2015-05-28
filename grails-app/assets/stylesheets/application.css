@@ -12,4 +12,5 @@
 *= require mobile
 *= require_self
 *= require bootstrap-duallistbox.min.css 
+*= require bootstrap-datepicker.min.css 
 */
