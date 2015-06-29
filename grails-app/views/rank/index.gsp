@@ -24,17 +24,17 @@
 			<thead>
 					<tr>
 					
-						<th><g:message code="rank.art.label" default="Art" /></th>
+						<th><g:message code="rank.topColor.label" default="Top Color" /></th>
 					
-						<g:sortableColumn property="belt" title="${message(code: 'rank.belt.label', default: 'Belt')}" />
+						<th><g:message code="rank.topCollarColor.label" default="Top Collar Color" /></th>
 					
-						<g:sortableColumn property="description" title="${message(code: 'rank.description.label', default: 'Description')}" />
+						<th><g:message code="rank.topCollarStripeColor.label" default="Top Collar Stripe Color" /></th>
 					
-						<g:sortableColumn property="name" title="${message(code: 'rank.name.label', default: 'Name')}" />
+						<g:sortableColumn property="topCollarStripeCount" title="${message(code: 'rank.topCollarStripeCount.label', default: 'Top Collar Stripe Count')}" />
 					
-						<g:sortableColumn property="nameKr" title="${message(code: 'rank.nameKr.label', default: 'Name Kr')}" />
+						<th><g:message code="rank.chevronColor.label" default="Chevron Color" /></th>
 					
-						<th><g:message code="rank.team.label" default="Team" /></th>
+						<g:sortableColumn property="chevronCount" title="${message(code: 'rank.chevronCount.label', default: 'Chevron Count')}" />
 					
 					</tr>
 				</thead>
@@ -42,17 +42,17 @@
 				<g:each in="${rankInstanceList}" status="i" var="rankInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${rankInstance.id}">${fieldValue(bean: rankInstance, field: "art")}</g:link></td>
+						<td><g:link action="show" id="${rankInstance.id}">${fieldValue(bean: rankInstance, field: "topColor")}</g:link></td>
 					
-						<td>${fieldValue(bean: rankInstance, field: "belt")}</td>
+						<td>${fieldValue(bean: rankInstance, field: "topCollarColor")}</td>
 					
-						<td>${fieldValue(bean: rankInstance, field: "description")}</td>
+						<td>${fieldValue(bean: rankInstance, field: "topCollarStripeColor")}</td>
 					
-						<td>${fieldValue(bean: rankInstance, field: "name")}</td>
+						<td>${fieldValue(bean: rankInstance, field: "topCollarStripeCount")}</td>
 					
-						<td>${fieldValue(bean: rankInstance, field: "nameKr")}</td>
+						<td>${fieldValue(bean: rankInstance, field: "chevronColor")}</td>
 					
-						<td>${fieldValue(bean: rankInstance, field: "team")}</td>
+						<td>${fieldValue(bean: rankInstance, field: "chevronCount")}</td>
 					
 					</tr>
 				</g:each>

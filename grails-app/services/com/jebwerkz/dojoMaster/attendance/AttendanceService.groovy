@@ -8,7 +8,12 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
@@ -16,9 +21,29 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.GrayColor;
 import com.itextpdf.text.BaseColor
 import com.itextpdf.text.pdf.BarcodeQRCode; 
+import com.jebwerkz.dojoMaster.rank.Rank
+import com.jebwerkz.dojoMaster.rank.Color
 
 @Transactional
 class AttendanceService {
+
+	def grailsApplication
+
+	private BaseColor white = BaseColor.WHITE
+	private BaseColor yellow = new BaseColor(255,251,0)
+	private BaseColor orange = new BaseColor(255,147,0)
+	private BaseColor green = new BaseColor(142,250,0)
+	private BaseColor blue = new BaseColor(0,150,255)
+	private BaseColor brown = new BaseColor(148,82,0)
+	private BaseColor purple = new BaseColor(148,55,255)
+	private BaseColor red = new BaseColor(255,38,0)
+	private BaseColor black = BaseColor.BLACK
+	private BaseColor grey = BaseColor.GRAY
+	
+	// private BaseColor tan
+	// private BaseColor lightGreen
+	// private BaseColor lightBlue
+	// private BaseColor navyBlue
 
     def serviceMethod() {
 
@@ -41,51 +66,186 @@ class AttendanceService {
         def baos = new ByteArrayOutputStream()
         PdfWriter writer = PdfWriter.getInstance(document,baos);
 
+		Font bannerFont = new Font(FontFamily.HELVETICA, 36, Font.BOLD);
+		Font circleFont = new Font(FontFamily.HELVETICA, 24);
+
         document.open();
 
         PdfContentByte canvas = writer.getDirectContent();
+		
+		def primaryColor = getPrimaryColor(attendanceCard)
+		def secondaryColor = getSecondaryColor(attendanceCard)
+		def nextColor = getNextColor(attendanceCard)
+		
 
-        canvas.saveState()
-        canvas.setColorStroke(BaseColor.BLACK)
-        canvas.setColorFill(BaseColor.BLUE)
+		//Left Vertical Bar
+		String attendanceBanner = "${attendanceCard.rank.name} Attendance"
+		def rankParts = attendanceCard.rank.name.tokenize(' ')
+		String attendanceCircle = rankParts[0] + "\n" + rankParts[1]
+		
+		canvas.saveState()
+        canvas.setColorStroke(black)
+        canvas.setLineWidth(3)
+        canvas.setColorFill(primaryColor)
         canvas.roundRectangle(18, 18, 82.8, 576, 41.4)
         canvas.fillStroke()
         canvas.restoreState()
+		
+		if(secondaryColor) {
+	        canvas.saveState()
+	        canvas.setColorStroke(black)
+        	canvas.setLineWidth(0)
+	        canvas.setColorFill(secondaryColor)
+	        canvas.roundRectangle(35, 18, 49.68, 576, 24.84)
+	        canvas.fillStroke()
+	        canvas.restoreState()
+		}
 
-        canvas.saveState()
-        canvas.setColorStroke(BaseColor.BLACK)
-        canvas.setColorFill(BaseColor.WHITE)
-        canvas.roundRectangle(35, 18, 49.68, 576, 24.84)
-        canvas.fillStroke()
-        canvas.restoreState()
+		Phrase banner = new Phrase(attendanceBanner, bannerFont)
+        ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, banner, 70, 306, 90);
 
-
-
-        canvas.saveState();
-        canvas.setColorStroke(new GrayColor(0.2f));
-        canvas.setColorFill(new GrayColor(0.9f));
+		//Upper Right Circle
+		
         //dpi:72
         //radius: 54
         //width:792
         //height:612
+        
+        canvas.saveState();
+        canvas.setColorStroke(black);
+        canvas.setLineWidth(3)
+        canvas.setColorFill(primaryColor);
         canvas.circle(707.16f, 542.16f, 54);
         canvas.fillStroke();
         canvas.restoreState();
         
-        canvas.saveState();
-        canvas.setColorStroke(BaseColor.BLACK);
-        canvas.setColorFill(BaseColor.WHITE);
-        canvas.roundRectangle(653.16f, 515.16f, 108, 54, 27);
-        canvas.fillStroke();
-        canvas.restoreState()
+        if(secondaryColor) {
+	        canvas.saveState();
+	        canvas.setColorStroke(black);
+        	canvas.setLineWidth(0)
+	        canvas.setColorFill(secondaryColor);
+	        canvas.roundRectangle(653.16f, 515.16f, 108, 54, 27);
+	        canvas.fillStroke();
+	        canvas.restoreState()
+        }
 
+		Phrase circle = new Phrase(attendanceCircle, circleFont)
+        ColumnText ct = new ColumnText(canvas)
+        ct.setSimpleColumn(circle, 1210, 572, 200, 100,
+    		24, Element.ALIGN_CENTER)
+        ct.go()
+
+        //QR Code
+        
         BarcodeQRCode qrcode = new BarcodeQRCode("attendanceCard:$attendanceCard.id", 1, 1, null);
         def img = qrcode.getImage();
         img.setAbsolutePosition(545,487.16);
         img.scaleAbsolute(108, 108)
         document.add(img);
 
-        // step 5
+		//Student Info Block
+		
+		Font whiteText = new Font(FontFamily.HELVETICA, 10, Font.NORMAL, white);
+		Font blackText = new Font(FontFamily.HELVETICA, 14, Font.BOLD);
+		
+		PdfPTable studentInfo = new PdfPTable(2)
+		def height = 30f
+		def width  = 100f
+		
+		PdfPCell fNameLabel = new PdfPCell(new Phrase("FIRST NAME", whiteText))
+		fNameLabel.setHorizontalAlignment(Element.ALIGN_CENTER)
+		
+		PdfPCell lNameLabel = new PdfPCell(new Phrase("LAST NAME", whiteText))
+		lNameLabel.setHorizontalAlignment(Element.ALIGN_CENTER)
+
+		studentInfo.addCell(fNameLabel)
+		studentInfo.addCell(lNameLabel)
+		
+		studentInfo.setTotalWidth((float)(2 * width))
+		studentInfo.setWidths([width, width] as float[])
+		studentInfo.writeSelectedRows(0, -1, 20.28f, (float)(studentInfo.getTotalHeight() + 20.0f), canvas);
+		//Attendance List
+		
+		//Five Areas of Testing
+
+		//Stripe Block
+		
+		whiteText = new Font(FontFamily.HELVETICA, 14, Font.BOLD, white);
+		blackText = new Font(FontFamily.HELVETICA, 14, Font.BOLD);
+		
+		PdfPTable stripeTable = new PdfPTable(3)
+		
+		def side = 30f
+		
+		PdfPCell leftPrimaryBlank = new PdfPCell(new Phrase(" "))
+		leftPrimaryBlank.setBackgroundColor(primaryColor)
+		leftPrimaryBlank.setFixedHeight(side);
+		if(secondaryColor == null) leftPrimaryBlank.setBorderWidthRight(0)
+		
+		PdfPCell rightPrimaryBlank = new PdfPCell(new Phrase(" "))
+		rightPrimaryBlank.setBackgroundColor(primaryColor)
+		rightPrimaryBlank.setFixedHeight(side);
+		if(secondaryColor == null) rightPrimaryBlank.setBorderWidthLeft(0)
+		
+		
+		PdfPCell secondaryBlank = new PdfPCell(new Phrase(" "))
+		secondaryBlank.setBackgroundColor(secondaryColor?:primaryColor)
+		secondaryBlank.setFixedHeight(side);
+		secondaryBlank.setBorderWidthLeft(0)
+		secondaryBlank.setBorderWidthRight(0)
+		
+		PdfPCell attitudeStripe = new PdfPCell(new Phrase("Attitude", whiteText))
+		attitudeStripe.setBackgroundColor(black)
+		attitudeStripe.setColspan(3);
+		attitudeStripe.setVerticalAlignment(Element.ALIGN_MIDDLE)
+		attitudeStripe.setHorizontalAlignment(Element.ALIGN_CENTER)
+		attitudeStripe.setFixedHeight(side);
+		
+		PdfPCell applicationStripe = new PdfPCell(new Phrase("Application", blackText))
+		applicationStripe.setBackgroundColor(nextColor)
+		applicationStripe.setColspan(3);
+		applicationStripe.setVerticalAlignment(Element.ALIGN_MIDDLE)
+		applicationStripe.setHorizontalAlignment(Element.ALIGN_CENTER)
+		applicationStripe.setFixedHeight(side);
+		
+		PdfPCell fundamentalsStripe = new PdfPCell(new Phrase("Fundamentals", blackText))
+		fundamentalsStripe.setBackgroundColor(nextColor)
+		fundamentalsStripe.setColspan(3);
+		fundamentalsStripe.setVerticalAlignment(Element.ALIGN_MIDDLE)
+		fundamentalsStripe.setHorizontalAlignment(Element.ALIGN_CENTER)
+		fundamentalsStripe.setFixedHeight(side);
+		
+		stripeTable.addCell(leftPrimaryBlank)
+		stripeTable.addCell(secondaryBlank)
+		stripeTable.addCell(rightPrimaryBlank)
+		
+		stripeTable.addCell(attitudeStripe)
+		
+		stripeTable.addCell(leftPrimaryBlank)
+		stripeTable.addCell(secondaryBlank)
+		stripeTable.addCell(rightPrimaryBlank)
+		
+		stripeTable.addCell(applicationStripe)
+		
+		stripeTable.addCell(leftPrimaryBlank)
+		stripeTable.addCell(secondaryBlank)
+		stripeTable.addCell(rightPrimaryBlank)
+		
+		stripeTable.addCell(fundamentalsStripe)
+		
+		stripeTable.addCell(leftPrimaryBlank)
+		stripeTable.addCell(secondaryBlank)
+		stripeTable.addCell(rightPrimaryBlank)
+		
+		stripeTable.setTotalWidth((float)(3 * side))
+		stripeTable.setWidths([side,side,side] as float[])
+		stripeTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        stripeTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+		
+		stripeTable.writeSelectedRows(0, -1, 341.28f, (float)(stripeTable.getTotalHeight() + 20.0f), canvas);
+		// document.add(stripeTable)
+		
+		//Finish Up
         document.close();
         return baos
     }
@@ -258,5 +418,85 @@ class AttendanceService {
             canvas.curveTo(x - r, y - r * b, x - r * b, y - r, x, y - r);
             canvas.curveTo(x + r * b, y - r, x + r, y - r * b, x + r, y);
         }
+    }
+    
+    private BaseColor getPrimaryColor(attendanceCard) {
+    	return getColor(attendanceCard.rank.beltColor.id)
+    }
+    
+    private BaseColor getSecondaryColor(attendanceCard) {
+    	def color = attendanceCard?.rank?.beltStripeColor?.id?:0
+    	return getColor(color)
+    }
+    
+    private BaseColor getNextColor(attendanceCard) {
+    	def color = attendanceCard?.rank?.skillStripeColor?.id?:0
+    	return getColor(color)
+    }
+    
+    private BaseColor getPrimaryTextColor(attendanceCard) {
+    	return getTextColor(attendanceCard.rank.beltColor.id)
+    }   
+    
+    private BaseColor getSecondaryTextColor(attendanceCard) {
+    	def color = attendanceCard?.rank?.beltStripeColor?.id?:0
+    	return getTextColor(color)
+    }
+    
+    private BaseColor getNextTextColor(attendanceCard) {
+    	def color = attendanceCard?.rank?.skillStripeColor?.id?:0
+    	return getTextColor(color)
+    }
+    
+    private BaseColor getColor(id) {
+    	switch(id) {
+    		case grailsApplication.config.color.white:
+    			return white
+    		case grailsApplication.config.color.yellow:
+    			retrun yellow
+    		case grailsApplication.config.color.orange:
+    			return orange
+    		case grailsApplication.config.color.green:
+    			return green
+    		case grailsApplication.config.color.blue:
+    			return blue
+    		case grailsApplication.config.color.brown:
+    			return brown
+    		case grailsApplication.config.color.purple:
+    			return purple
+    		case grailsApplication.config.color.red:
+    			return red
+    		case grailsApplication.config.color.black:
+    			return black
+    		default:
+    			return null
+    		
+    	}
+    }
+    
+    private BaseColor getTextColor(id) {
+    	switch(id) {
+    		case grailsApplication.config.color.white:
+    			return black
+    		case grailsApplication.config.color.yellow:
+    			retrun black
+    		case grailsApplication.config.color.orange:
+    			return black
+    		case grailsApplication.config.color.green:
+    			return black
+    		case grailsApplication.config.color.blue:
+    			return black
+    		case grailsApplication.config.color.brown:
+    			return black
+    		case grailsApplication.config.color.purple:
+    			return black
+    		case grailsApplication.config.color.red:
+    			return black
+    		case grailsApplication.config.color.black:
+    			return white
+    		default:
+    			return black
+    	}
+    	
     }
 }
